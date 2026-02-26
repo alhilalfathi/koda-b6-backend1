@@ -81,7 +81,62 @@ func main() {
 	})
 
 	r.PATCH("/users/:id", func(ctx *gin.Context) {
+		id := ctx.Param("id")
+		var newData Users
+		err := ctx.ShouldBind(&newData)
 
+		if err != nil {
+			ctx.JSON(400, Response{
+				Success: false,
+				Message: "Input error",
+			})
+			return
+		}
+		for i := range UserList {
+			if fmt.Sprint(UserList[i].Id) == id {
+				if newData.Email != "" {
+					for j := range UserList {
+						if UserList[j].Email == newData.Email && UserList[j].Id != newData.Id {
+							ctx.JSON(400, Response{
+								Success: false,
+								Message: "Email already registered",
+							})
+							return
+						}
+					}
+					UserList[i].Email = newData.Email
+				}
+				if newData.Password != "" {
+					UserList[i].Password = newData.Password
+				}
+				ctx.JSON(200, Response{
+					Success: true,
+					Message: "User data updated",
+				})
+				return
+			}
+			ctx.JSON(400, Response{
+				Success: false,
+				Message: "Input error",
+			})
+		}
+		ctx.JSON(400, Response{
+			Success: false,
+			Message: "User not found",
+		})
+	})
+
+	r.DELETE("/users/:id", func(ctx *gin.Context) {
+		id := ctx.Param("id")
+		for i := range UserList {
+			if fmt.Sprint(UserList[i].Id) == id {
+				UserList = append(UserList[:i], UserList[i+1:]...)
+				ctx.JSON(200, Response{
+					Success: true,
+					Message: "User deleted",
+				})
+			}
+		}
 	})
 
 	r.Run("localhost:8989")
