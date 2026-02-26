@@ -1,0 +1,25 @@
+GET /users HTTP/1.1
+Host: localhost:8989
+
+###
+GET /users/2 HTTP/1.1
+Host: localhost:8989
+
+###
+POST /users HTTP/1.1
+Host: localhost:8989
+Content-Type: application/json
+
+{
+    "email": "admin@mail.com",
+    "password": "admin123"
+}
+###
+POST /users HTTP/1.1
+Host: localhost:8989
+Content-Type: application/json
+
+{
+    "email": "admin2@mail.com",
+    "password": "admin123"
+}
