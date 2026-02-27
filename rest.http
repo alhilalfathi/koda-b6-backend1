@@ -5,7 +5,7 @@ Host: localhost:8989
 GET /users/2 HTTP/1.1
 Host: localhost:8989
 
-###
+### user1
 POST /users HTTP/1.1
 Host: localhost:8989
 Content-Type: application/json
@@ -14,7 +14,7 @@ Content-Type: application/json
     "email": "admin@mail.com",
     "password": "admin123"
 }
-###
+### user2
 POST /users HTTP/1.1
 Host: localhost:8989
 Content-Type: application/json
@@ -34,4 +34,24 @@ Host: localhost:8989
 
 {
     "password": "12345678"
+}
+
+###
+POST /register HTTP/1.1
+Host: localhost:8989
+Content-Type: application/json
+
+{
+    "email": "admin@mail.com",
+    "password": "admin1234"
+}
+
+###
+POST /login HTTP/1.1
+Host: localhost:8989
+Content-Type: application/json
+
+{
+    "email": "admin@mail.com",
+    "password": "admin1234"
 }
