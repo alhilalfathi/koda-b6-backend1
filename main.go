@@ -19,11 +19,85 @@ type Users struct {
 }
 
 var nextId = 1
+var nextAccId = 1
 
 var UserList []Users
+var AccountList []Users
 
 func main() {
 	r := gin.Default()
+
+	r.POST("/register", func(ctx *gin.Context) {
+		var data Users
+		err := ctx.ShouldBind(&data)
+
+		if err != nil {
+			ctx.JSON(400, Response{
+				Success: false,
+				Message: "Register Failed",
+			})
+			return
+		}
+
+		for i := 0; i < len(AccountList); i++ {
+			if AccountList[i].Email == data.Email {
+				ctx.JSON(400, Response{
+					Success: false,
+					Message: "Email already exist",
+				})
+				return
+			}
+		}
+
+		data.Id = nextAccId
+		AccountList = append(AccountList, data)
+		nextAccId++
+		ctx.JSON(200, Response{
+			Success: true,
+			Message: "Register Success",
+		})
+	})
+
+	r.POST("/login", func(ctx *gin.Context) {
+		var data Users
+		err := ctx.ShouldBind(&data)
+
+		if err != nil {
+			ctx.JSON(400, Response{
+				Success: false,
+				Message: "Login Failed",
+			})
+			return
+		}
+		if data.Email == "" || data.Password == "" {
+			ctx.JSON(400, Response{
+				Success: false,
+				Message: "Email and Password cannot blank",
+			})
+			return
+		}
+
+		for i := 0; i < len(AccountList); i++ {
+			if AccountList[i].Email == data.Email {
+				if AccountList[i].Password == data.Password {
+					ctx.JSON(200, Response{
+						Success: true,
+						Message: "Login Successfuly",
+					})
+				} else {
+					ctx.JSON(400, Response{
+						Success: false,
+						Message: "Password Incorrect",
+					})
+				}
+			} else {
+				ctx.JSON(400, Response{
+					Success: false,
+					Message: "Email Incorrect",
+				})
+			}
+		}
+	})
 
 	r.POST("/users", func(ctx *gin.Context) {
 		var data Users
