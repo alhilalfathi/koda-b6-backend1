@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/matthewhartstonge/argon2"
 )
 
 type Response struct {
@@ -16,6 +18,24 @@ type Users struct {
 	Id       int    `json:"id"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
+}
+
+var argon = argon2.DefaultConfig()
+
+func HashPassword(password string) (string, error) {
+	hash, err := argon.HashEncoded([]byte(password))
+	if err != nil {
+		return "", err
+	}
+	return string(hash), nil
+}
+
+func VerifyPassword(encodedHash, password string) bool {
+	ok, err := argon2.VerifyEncoded([]byte(password), []byte(encodedHash))
+	if err != nil {
+		return false
+	}
+	return ok
 }
 
 var nextId = 1
@@ -38,6 +58,13 @@ func main() {
 			})
 			return
 		}
+		if data.Email == "" || data.Password == "" {
+			ctx.JSON(http.StatusBadRequest, Response{
+				Success: false,
+				Message: "Email and Password cannot blank",
+			})
+			return
+		}
 
 		for i := 0; i < len(AccountList); i++ {
 			if AccountList[i].Email == data.Email {
@@ -49,6 +76,16 @@ func main() {
 			}
 		}
 
+		hashedPassword, err := HashPassword(data.Password)
+		if err != nil {
+			ctx.JSON(500, Response{
+				Success: false,
+				Message: "Failed to hash password",
+			})
+			return
+		}
+
+		data.Password = hashedPassword
 		data.Id = nextAccId
 		AccountList = append(AccountList, data)
 		nextAccId++
@@ -79,10 +116,10 @@ func main() {
 
 		for i := 0; i < len(AccountList); i++ {
 			if AccountList[i].Email == data.Email {
-				if AccountList[i].Password == data.Password {
-					ctx.JSON(200, Response{
+				if VerifyPassword(AccountList[i].Password, data.Password) {
+					ctx.JSON(http.StatusOK, Response{
 						Success: true,
-						Message: "Login Successfuly",
+						Message: "Login successful",
 					})
 				} else {
 					ctx.JSON(400, Response{
@@ -90,12 +127,13 @@ func main() {
 						Message: "Password Incorrect",
 					})
 				}
-			} else {
-				ctx.JSON(400, Response{
-					Success: false,
-					Message: "Email Incorrect",
-				})
+				return
 			}
+			ctx.JSON(400, Response{
+				Success: false,
+				Message: "Email Incorrect",
+			})
+
 		}
 	})
 
