@@ -11,6 +11,7 @@ Host: localhost:8989
 Content-Type: application/json
 
 {
+    "name": "Admin 1",
     "email": "admin@mail.com",
     "password": "admin123"
 }
@@ -20,6 +21,7 @@ Host: localhost:8989
 Content-Type: application/json
 
 {
+    "name": "Admin 2",
     "email": "admin2@mail.com",
     "password": "admin123"
 }
@@ -42,6 +44,7 @@ Host: localhost:8989
 Content-Type: application/json
 
 {
+    "name": "admin 1",
     "email": "admin@mail.com",
     "password": "admin1234"
 }
@@ -54,4 +57,26 @@ Content-Type: application/json
 {
     "email": "admin@mail.com",
     "password": "admin1234"
+}
+
+###
+GET /product HTTP/1.1
+Host: localhost:8989
+Content-Type: application/json
+
+###
+GET /product/1 HTTP/1.1
+Host: localhost:8989
+Content-Type: application/json
+
+###
+POST /product HTTP/1.1
+Host: localhost:8989
+Content-Type: application/json
+
+{
+    "product_name": "Americano",
+    "product_tag": "Delicious strong black coffee",
+    "price": 15000,
+    "category": "coffee" 
 }
