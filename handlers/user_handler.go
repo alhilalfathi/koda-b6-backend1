@@ -161,6 +161,15 @@ func GetUser(ctx *gin.Context) {
 	})
 }
 
+// GetUserById godoc
+// @Summary Get user account by id
+// @Description show id, email, and password user by searched id
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param id path string true "User ID"
+// @Success 200 {object} models.Users
+// @Router /users/{id} [get]
 func GetUserById(ctx *gin.Context) {
 	id := ctx.Param("id")
 	for i := range models.UserList {

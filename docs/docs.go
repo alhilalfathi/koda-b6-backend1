@@ -105,6 +105,38 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/users/{id}": {
+            "get": {
+                "description": "show id, email, and password user by searched id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get user account by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Users"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
