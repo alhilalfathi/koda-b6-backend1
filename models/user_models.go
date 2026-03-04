@@ -12,8 +12,11 @@ type Users struct {
 	Password string `json:"password"`
 }
 
+type LoginReq struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 var NextId = 1
-var NextAccId = 1
 
 var UserList []Users
-var AccountList []Users

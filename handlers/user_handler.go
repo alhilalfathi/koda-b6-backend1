@@ -8,6 +8,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Register godoc
+// @Summary Register new account
+// @Description Register new account with email and password
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param request body models.Users true "fields"
+// @Success 200 {object} models.Users
+// @Router /register [post]
 func Register(ctx *gin.Context) {
 	var data models.Users
 	err := ctx.ShouldBind(&data)
@@ -27,8 +36,8 @@ func Register(ctx *gin.Context) {
 		return
 	}
 
-	for i := 0; i < len(models.AccountList); i++ {
-		if models.AccountList[i].Email == data.Email {
+	for i := 0; i < len(models.UserList); i++ {
+		if models.UserList[i].Email == data.Email {
 			ctx.JSON(400, models.Response{
 				Success: false,
 				Message: "Email already exist",
@@ -47,17 +56,26 @@ func Register(ctx *gin.Context) {
 	}
 
 	data.Password = hashedPassword
-	data.Id = models.NextAccId
-	models.AccountList = append(models.AccountList, data)
-	models.NextAccId++
+	data.Id = models.NextId
+	models.UserList = append(models.UserList, data)
+	models.NextId++
 	ctx.JSON(200, models.Response{
 		Success: true,
 		Message: "Register Success",
 	})
 }
 
+// Login godoc
+// @Summary Login to registered account
+// @Description Login with email and password
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param request body models.LoginReq true "fields"
+// @Success 200 {object} models.Users
+// @Router /login [post]
 func Login(ctx *gin.Context) {
-	var data models.Users
+	var data models.LoginReq
 	err := ctx.ShouldBind(&data)
 
 	if err != nil {
@@ -75,9 +93,9 @@ func Login(ctx *gin.Context) {
 		return
 	}
 
-	for i := 0; i < len(models.AccountList); i++ {
-		if models.AccountList[i].Email == data.Email {
-			if VerifyPassword(models.AccountList[i].Password, data.Password) {
+	for i := 0; i < len(models.UserList); i++ {
+		if models.UserList[i].Email == data.Email {
+			if VerifyPassword(models.UserList[i].Password, data.Password) {
 				ctx.JSON(http.StatusOK, models.Response{
 					Success: true,
 					Message: "Login successful",
@@ -127,6 +145,14 @@ func CreateUser(ctx *gin.Context) {
 	})
 }
 
+// GetAllUser godoc
+// @Summary Get All registered account
+// @Description show all account id, email, and password
+// @Tags users
+// @Accept json
+// @Produce json
+// @Success 200 {object} models.Users
+// @Router /users [get]
 func GetUser(ctx *gin.Context) {
 	ctx.JSON(200, models.Response{
 		Success: true,
