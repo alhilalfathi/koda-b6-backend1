@@ -188,6 +188,16 @@ func GetUserById(ctx *gin.Context) {
 	})
 }
 
+// EditUser godoc
+// @Summary Edit user account by id
+// @Description Edit password user by searched id
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param id path string true "User ID"
+// @Param user body models.Users true "Update Password"
+// @Success 200 {object} models.Users
+// @Router /users/{id} [patch]
 func EditUser(ctx *gin.Context) {
 	id := ctx.Param("id")
 	var newData models.Users
@@ -223,10 +233,6 @@ func EditUser(ctx *gin.Context) {
 			})
 			return
 		}
-		ctx.JSON(400, models.Response{
-			Success: false,
-			Message: "Input error",
-		})
 	}
 	ctx.JSON(400, models.Response{
 		Success: false,
@@ -234,6 +240,15 @@ func EditUser(ctx *gin.Context) {
 	})
 }
 
+// DeleteUser godoc
+// @Summary Delete user account by id
+// @Description remove user account by searched id
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param id path string true "User ID"
+// @Success 200 {object} models.Users
+// @Router /users/{id} [delete]
 func DeleteUser(ctx *gin.Context) {
 	id := ctx.Param("id")
 	for i := range models.UserList {
