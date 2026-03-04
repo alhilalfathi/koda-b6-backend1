@@ -1,11 +1,19 @@
 package main
 
 import (
+	docs "koda-b6-backend1/docs"
 	"koda-b6-backend1/handlers"
 
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+// @title Backend Apps
+// @version 1.0.0
+// @description this is basic bakcend apps with DI
+// @host localhost:8989
+// @BasePath /
 func main() {
 	r := gin.Default()
 
@@ -21,6 +29,13 @@ func main() {
 	r.GET("/product", handlers.GetProduct)
 	r.GET("/product/:id", handlers.GetProductById)
 	r.POST("/product", handlers.CreateProduct)
+
+	docs.SwaggerInfo.BasePath = "/"
+
+	docPath := r.Group("/docs")
+	{
+		docPath.GET("/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	}
 
 	r.Run("localhost:8989")
 }

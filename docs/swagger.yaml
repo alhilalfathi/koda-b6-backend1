@@ -1,0 +1,85 @@
+basePath: /
+definitions:
+  models.LoginReq:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  models.Users:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+    type: object
+host: localhost:8989
+info:
+  contact: {}
+  description: this is basic bakcend apps with DI
+  title: Backend Apps
+  version: 1.0.0
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login with email and password
+      parameters:
+      - description: fields
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Users'
+      summary: Login to registered account
+      tags:
+      - auth
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register new account with email and password
+      parameters:
+      - description: fields
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.Users'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Users'
+      summary: Register new account
+      tags:
+      - auth
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: show all account id, email, and password
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Users'
+      summary: Get All registered account
+      tags:
+      - users
+swagger: "2.0"
