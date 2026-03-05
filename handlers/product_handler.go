@@ -7,6 +7,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetAllProduct godoc
+// @Summary Get All product data
+// @Description show all product data
+// @Tags products
+// @Accept json
+// @Produce json
+// @Success 200 {object} models.Products
+// @Router /product [get]
 func GetProduct(ctx *gin.Context) {
 	ctx.JSON(200, models.Response{
 		Success: true,
@@ -15,6 +23,15 @@ func GetProduct(ctx *gin.Context) {
 	})
 }
 
+// GetProductById godoc
+// @Summary Get product data by id
+// @Description show product data by searched id
+// @Tags product
+// @Accept json
+// @Produce json
+// @Param id path string true "Product ID"
+// @Success 200 {object} models.Product
+// @Router /product/{id} [get]
 func GetProductById(ctx *gin.Context) {
 	id := ctx.Param("id")
 	for i := range models.ProductList {
@@ -33,6 +50,15 @@ func GetProductById(ctx *gin.Context) {
 	})
 }
 
+// Create Product godoc
+// @Summary create new product data
+// @Description make new product
+// @Tags product
+// @Accept json
+// @Produce json
+// @Param request body models.Product true "fields"
+// @Success 200 {object} models.Product
+// @Router /product [post]
 func CreateProduct(ctx *gin.Context) {
 	var data models.Product
 
