@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"koda-b6-backend1/models"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -93,4 +94,27 @@ func CreateProduct(ctx *gin.Context) {
 		Success: true,
 		Message: "Product created successfully",
 	})
+}
+
+// DeleteProduct godoc
+// @Summary Delete product data by id
+// @Description remove product data by searched id
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param id path string true "Product ID"
+// @Success 200 {object} models.Product
+// @Router /product/{id} [delete]
+func DeleteProduct(ctx *gin.Context) {
+	id := ctx.Param("id")
+	strId, _ := strconv.Atoi(id)
+	for i := range models.ProductList {
+		if models.ProductList[i].Id == strId {
+			models.ProductList = append(models.ProductList[:i], models.ProductList[i+1:]...)
+			ctx.JSON(200, models.Response{
+				Success: true,
+				Message: "Product deleted",
+			})
+		}
+	}
 }
