@@ -26,9 +26,10 @@ func main() {
 	r.PATCH("/users/:id", handlers.EditUser)
 	r.DELETE("/users/:id", handlers.DeleteUser)
 
+	r.POST("/product", handlers.CreateProduct)
 	r.GET("/product", handlers.GetProduct)
 	r.GET("/product/:id", handlers.GetProductById)
-	r.POST("/product", handlers.CreateProduct)
+	r.DELETE("/product/:id", handlers.DeleteProduct)
 
 	docs.SwaggerInfo.BasePath = "/"
 
